@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Modern App</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --background-color: #f9fafb;
+            --card-background: #ffffff;
+            --text-color: #111827;
+            --text-muted: #6b7280;
+            --info-color: #3b82f6;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .register-container {
+            background: var(--card-background);
+            width: 100%;
+            max-width: 420px;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header .logo {
+            font-size: 3rem;
+            color: var(--primary-color);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group .icon-left {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .input-group .icon-right {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 5px;
+            transition: var(--transition);
+        }
+
+        .input-group .icon-right:hover {
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            transition: var(--transition);
+            color: var(--text-color);
+        }
+
+        .form-control.password-input {
+            padding-right: 2.5rem; /* Ensure padding accommodates the eye icon */
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .strength-meter {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 0.25rem;
+            overflow: hidden;
+        }
+
+        .strength-meter div {
+            height: 100%;
+            width: 0;
+            transition: var(--transition);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--border-radius);
+            background: var(--primary-color);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .requirements-list {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .requirements-list p {
+            margin: 0.25rem 0;
+        }
+
+        .requirement {
+            margin-right: 0.5rem;
+            color: #d1d5db;
+        }
+
+        .requirement.valid {
+            color: #10b981;
+        }
+
+        .password-match-message {
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        .password-match-message.match {
+            color: #10b981;
+        }
+
+        .password-match-message.no-match {
+            color: #ef4444;
+        }
+
+        .strength-meter {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 0.25rem;
+            overflow: hidden;
+        }
+
+        .strength-meter div {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2>Create Account</h2>
+            <p class="subtitle">Join our community today</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert">
+                    <i class="fas fa-info-circle"></i>
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-group">
+                    <i class="fas fa-user icon-left"></i>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Choose a username"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock icon-left"></i>
+                    <input 
+                        type="password" 
+                        class="form-control password-input" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Create a strong password"
+                        required
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                        title="Password must be at least 8 characters long and include letters, numbers, and special characters"
+                    >
+                    <i class="fas fa-eye icon-right" id="togglePassword"></i>
+                </div>
+                <div class="password-strength">
+                    <span id="strength-text">Password strength</span>
+                    <div class="strength-meter">
+                        <div id="strength-bar"></div>
+                    </div>
+                    <div id="password-requirements" class="requirements-list">
+                        <p><i class="fas fa-check-circle requirement" id="length-check"></i> At least 8 characters</p>
+                        <p><i class="fas fa-check-circle requirement" id="uppercase-check"></i> One uppercase letter</p>
+                        <p><i class="fas fa-check-circle requirement" id="lowercase-check"></i> One lowercase letter</p>
+                        <p><i class="fas fa-check-circle requirement" id="number-check"></i> One number</p>
+                        <p><i class="fas fa-check-circle requirement" id="special-check"></i> One special character</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <div class="input-group">
+                    <i class="fas fa-lock icon-left"></i>
+                    <input 
+                        type="password" 
+                        class="form-control password-input" 
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        placeholder="Confirm your password"
+                        required
+                    >
+                    <i class="fas fa-eye icon-right" id="toggleConfirmPassword"></i>
+                </div>
+                <div id="password-match" class="password-match-message"></div>
+            </div>
+
+            <button type="submit" class="btn">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </button>
+        </form>
+
+        <p class="login-link">
+            Already have an account? 
+            <a href="{{ url_for('login') }}">Sign in</a>
+        </p>
+    </div>
+
+    <script>
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthText = document.getElementById('strength-text');
+        const passwordMatch = document.getElementById('password-match');
+        const form = document.querySelector('form');
+
+        // Password visibility toggle
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const checks = {
+                'length': password.length >= 8,
+                'uppercase': /[A-Z]/.test(password),
+                'lowercase': /[a-z]/.test(password),
+                'number': /\d/.test(password),
+                'special': /[^A-Za-z0-9]/.test(password)
+            };
+
+            // Update requirement checks
+            Object.keys(checks).forEach(check => {
+                const element = document.getElementById(`${check}-check`);
+                if (checks[check]) {
+                    element.classList.add('valid');
+                    strength++;
+                } else {
+                    element.classList.remove('valid');
+                }
+            });
+
+            return strength;
+        }
+
+        password.addEventListener('input', function() {
+            const strength = checkPasswordStrength(this.value);
+            const percentage = (strength / 5) * 100;
+            
+            strengthBar.style.width = `${percentage}%`;
+            strengthBar.style.backgroundColor = 
+                percentage <= 20 ? '#ef4444' :
+                percentage <= 40 ? '#f59e0b' :
+                percentage <= 60 ? '#fbbf24' :
+                percentage <= 80 ? '#34d399' : '#10b981';
+
+            strengthText.textContent = 
+                percentage <= 20 ? 'Very Weak' :
+                percentage <= 40 ? 'Weak' :
+                percentage <= 60 ? 'Medium' :
+                percentage <= 80 ? 'Strong' : 'Very Strong';
+        });
+
+        // Password match checker
+        confirmPassword.addEventListener('input', function() {
+            if (this.value === password.value) {
+                passwordMatch.textContent = 'Passwords match';
+                passwordMatch.className = 'password-match-message match';
+            } else {
+                passwordMatch.textContent = 'Passwords do not match';
+                passwordMatch.className = 'password-match-message no-match';
+            }
+        });
+
+        // Form submission validation
+        form.addEventListener('submit', function(e) {
+            if (password.value !== confirmPassword.value) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+
+            const strength = checkPasswordStrength(password.value);
+            if (strength < 3) {
+                e.preventDefault();
+                alert('Password is too weak! Please make it stronger.');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
